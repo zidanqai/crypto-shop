@@ -1,0 +1,37 @@
+{
+  "name": "crypto-shop",
+  "version": "1.0.0",
+  "description": "Starter crypto wallet module with CI on push",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "dev": "ts-node src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zidanqai/crypto-shop.git"
+  },
+  "keywords": [
+    "crypto",
+    "wallet",
+    "ethereum",
+    "typescript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/zidanqai/crypto-shop/issues"
+  },
+  "homepage": "https://github.com/zidanqai/crypto-shop#readme",
+  "dependencies": {
+    "ethers": "^6.15.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  }
+}
