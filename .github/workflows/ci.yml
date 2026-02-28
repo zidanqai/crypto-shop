@@ -1,31 +1,43 @@
-name: Build and Test
+name: "Core: Build & Test"
 
 on:
   push:
-    branches:
-      - main
-      - "**"
+    paths:
+      - "packages/core/**"
+      - ".github/workflows/ci.yml"
   pull_request:
+    paths:
+      - "packages/core/**"
+
+concurrency:
+  group: core-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  build-and-test:
+    name: Build & Test (Node ${{ matrix.node }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: ["18", "20", "22"]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node ${{ matrix.node }}
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: npm
+          node-version: ${{ matrix.node }}
 
       - name: Install dependencies
+        working-directory: packages/core
         run: npm install
 
       - name: Run tests
+        working-directory: packages/core
         run: npm test
 
       - name: Build
+        working-directory: packages/core
         run: npm run build
