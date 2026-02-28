@@ -1,0 +1,56 @@
+name: "Mobile: Build APK"
+
+on:
+  push:
+    paths:
+      - "mobile/**"
+      - ".github/workflows/mobile-ci.yml"
+  pull_request:
+    paths:
+      - "mobile/**"
+
+concurrency:
+  group: mobile-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        working-directory: mobile
+        run: npm install
+
+      - name: Expo prebuild (Android)
+        working-directory: mobile
+        run: npx expo prebuild --platform android --no-install
+
+      - name: Build debug APK
+        working-directory: mobile/android
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: crypto-shop-debug-${{ github.sha }}
+          path: mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
